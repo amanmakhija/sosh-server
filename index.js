@@ -13,6 +13,13 @@ const messageRoute = require("./routes/messages");
 const path = require("path");
 const notificationRoute = require("./routes/notifications");
 const friendRequestRoute = require("./routes/friendRequest");
+const io = require("socket.io")(8900, {
+  cors: {
+    origin: "http://localhost:3000"
+  }
+});
+
+let users = [];
 
 dotenv.config();
 
@@ -58,4 +65,46 @@ app.use("/api/friendRequests", friendRequestRoute);
 
 app.listen(8800, () => {
   console.log("Backend server is running!");
+});
+
+///Socket
+const addUser = (userId, socketId) => {
+  !users.some(user => user.userId === userId) &&
+    users.push({ userId, socketId });
+}
+
+const removeUser = (socketId) => {
+  users = users.filter(user => user.socketId !== socketId);
+}
+
+const getUser = (userId) => {
+  return users.find(user => user.userId === userId);
+}
+
+io.on("connection", (socket) => {
+  //When Connected
+  console.log("User Connected");
+
+  //take  userId and socketId from user
+  socket.on("addUser", userId => {
+    addUser(userId, socket.id);
+    io.emit("getUsers", users);
+  });
+
+  //Send and Get Message
+  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    const user = getUser(receiverId);
+
+    io.to(user.socketId).emit("getMessage", {
+      senderId,
+      text
+    });
+  });
+
+  //When Disconnected
+  socket.on("disconnect", () => {
+    console.log("User Disconnected");
+    removeUser(socket.id);
+    io.emit("getUsers", users);
+  });
 });
