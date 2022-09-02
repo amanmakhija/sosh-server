@@ -13,13 +13,12 @@ const messageRoute = require("./routes/messages");
 const path = require("path");
 const notificationRoute = require("./routes/notifications");
 const friendRequestRoute = require("./routes/friendRequest");
+const cors = require("cors");
 const io = require("socket.io")(8900, {
   cors: {
     origin: "http://localhost:3000"
   }
 });
-
-let users = [];
 
 dotenv.config();
 
@@ -73,6 +72,8 @@ app.listen(process.env.PORT || 8800, () => {
 });
 
 ///Socket
+let users = [];
+
 const addUser = (userId, socketId) => {
   !users.some(user => user.userId === userId) &&
     users.push({ userId, socketId });
