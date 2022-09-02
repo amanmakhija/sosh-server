@@ -15,12 +15,12 @@ const io = require("socket.io")(8900, {
 });
 
 //Models
-const Conversation = require("../models/Conversation");
-const FR = require("../models/FriendRequest");
-const Message = require("../models/Message");
-const Notification = require("../models/Notification");
-const Post = require("../models/Post");
-const User = require("../models/User");
+const Conversation = require("./models/Conversation");
+const FR = require("./models/FriendRequest");
+const Message = require("./models/Message");
+const Notification = require("./models/Notification");
+const Post = require("./models/Post");
+const User = require("./models/User");
 
 dotenv.config();
 
