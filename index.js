@@ -33,6 +33,7 @@ mongoose.connect(
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 //middleware
+app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
