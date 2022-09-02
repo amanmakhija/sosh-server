@@ -63,6 +63,10 @@ app.use("/api/messages", messageRoute);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/friendRequests", friendRequestRoute);
 
+app.get("/", (req, res) => {
+  res.render("Server is running");
+});
+
 app.listen(process.env.PORT || 8800, () => {
   console.log("Backend server is running!");
 });
